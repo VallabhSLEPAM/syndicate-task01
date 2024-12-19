@@ -34,7 +34,7 @@
     "resource_type": "iam_role",
     "tags": {}
   },
-  "hello": {
+  "task3_api-test": {
     "resource_type": "api_gateway",
     "deploy_stage": "api",
     "dependencies": [],
@@ -43,7 +43,7 @@
         "enable_cors": false,
         "GET": {
           "authorization_type": "NONE",
-          "integration_type": "lambda",
+          "integration_type": "http",
           "lambda_name": "hello_world",
           "api_key_required": false,
           "method_request_parameters": {},
