@@ -7,7 +7,7 @@
     <groupId>task04-group</groupId>
     <artifactId>task04</artifactId>
     <version>1.0.0</version>
-
+    
     <properties>
         <maven-shade-plugin.version>3.5.2</maven-shade-plugin.version>
         <syndicate.java.plugin.version>1.14.0</syndicate.java.plugin.version>
@@ -16,6 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <src.dir>jsrc/main/java</src.dir>
         <resources.dir>jsrc/main/resources</resources.dir>
+        <syndicate.java.plugin.version>1.11.1</syndicate.java.plugin.version>
+
     </properties>
 
     <dependencies>
@@ -31,6 +33,7 @@
             <artifactId>deployment-configuration-annotations</artifactId>
             <version>${syndicate.java.plugin.version}</version>
         </dependency>
+        
     </dependencies>
 
     <build>
