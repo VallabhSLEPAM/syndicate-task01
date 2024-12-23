@@ -20,7 +20,7 @@ import java.util.Map;
 )
 @SqsTriggerEventSource(
 	targetQueue = "async_queue",
-	batchSize = 1
+	batchSize = 10
 )
 @DependsOn(
         name = "async_queue",
@@ -32,7 +32,7 @@ public class SqsHandler implements RequestHandler<Object, Map<String, Object>> {
 		System.out.println("Hello from lambda");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("statusCode", 200);
-		resultMap.put("body", "Hello from Lambda");
+		resultMap.put("message", "Hello from Lambda");
 		return resultMap;
 	}
 }
