@@ -1,5 +1,6 @@
 package com.task04;
 
+import java.util.List;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
@@ -7,6 +8,7 @@ import com.syndicate.deployment.model.RetentionSetting;
 import com.syndicate.deployment.annotations.events.SnsEventSource;
 import com.syndicate.deployment.annotations.resources.DependsOn;
 import com.syndicate.deployment.model.ResourceType;
+import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,13 +25,22 @@ import java.util.Map;
         name = "lambda_topic",
         resourceType = ResourceType.SNS_TOPIC//"sns_topic"
 )
-public class SnsHandler implements RequestHandler<Object, Map<String, Object>> {
+public class SnsHandler implements RequestHandler<SNSEvent, String> {
 
-	public Map<String, Object> handleRequest(Object request, Context context) {
-		System.out.println("Hello from lambda");
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("statusCode", 200);
-		resultMap.put("body", "Hello from Lambda");
-		return resultMap;
-	}
+	 public String handleRequest(SNSEvent event, Context context) {
+        // Iterate through SNS records in the event
+        // for (SNSEvent.SNSRecord record : event.getRecords()) {
+        //     // Extract the SNS message
+        //     SNSEvent.SNS sns = record.getSNS();
+        //     String message = sns.getMessage();
+
+        //     // Log the message to CloudWatch
+        //     context.getLogger().log(message);
+        // }
+        List<SNSEvent.SNSRecord> records = event.getRecords();
+        SNSEvent.SNS firstSNSRecord = records.get(0).getSNS();
+
+        context.getLogger().log(firstSNSRecord.getMessage());
+        return "Message logged successfully";
+    }
 }

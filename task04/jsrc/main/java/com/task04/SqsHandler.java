@@ -7,6 +7,7 @@ import com.syndicate.deployment.model.RetentionSetting;
 import com.syndicate.deployment.annotations.events.SqsTriggerEventSource;
 import com.syndicate.deployment.annotations.resources.DependsOn;
 import com.syndicate.deployment.model.ResourceType;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +27,13 @@ import java.util.Map;
         name = "async_queue",
         resourceType = ResourceType.SQS_QUEUE
 )
-public class SqsHandler implements RequestHandler<Object, Map<String, Object>> {
+public class SqsHandler implements RequestHandler<SQSEvent, Void> {
 
-	public Map<String, Object> handleRequest(Object request, Context context) {
-		System.out.println("Hello from lambda");
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("statusCode", 200);
-		resultMap.put("message", "Hello from Lambda");
-		return resultMap;
+	public Void handleRequest(SQSEvent event, Context context) {
+		for (SQSEvent.SQSMessage message : event.getRecords()) {
+            // Print the message body to CloudWatch Logs
+            context.getLogger().log(message.getBody());
+        }
+		return null;
 	}
 }
