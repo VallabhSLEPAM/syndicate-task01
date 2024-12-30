@@ -45,14 +45,14 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
         try {
 			// Parse the JSON body
             JsonNode jsonNode = objectMapper.readTree(requestBody);
- 			String content = jsonNode.get("content").asText();
+ 			// String content = jsonNode.get("content").asText();
 			String principalId = jsonNode.get("principalId").asText();
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
 	   
 			// Prepare item for DynamoDB
 			Map<String, AttributeValue> item = new HashMap<>();
 			item.put("id", AttributeValue.builder().s(requestId).build());
-			item.put("body", AttributeValue.builder().s(content).build());
+			// item.put("body", AttributeValue.builder().s(content).build());
 			item.put("principalId", AttributeValue.builder().s(principalId).build());
 			item.put("createdAt", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
 			
