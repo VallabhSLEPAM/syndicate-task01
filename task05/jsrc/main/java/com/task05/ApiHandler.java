@@ -68,7 +68,7 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 
             dynamoDbClient.putItem(request);
             context.getLogger().log("Item successfully stored in DynamoDB");
-            String responseBody = objectMapper.writeValueAsString(item);
+            String responseBody = objectMapper.writeValueAsString(response);
 
             // Return success response
             return new APIGatewayV2HTTPResponse().builder()
