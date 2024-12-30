@@ -40,7 +40,7 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent event, Context context) {
 			
         String requestBody = event.getBody();
-		System.out.println("Request Body:"+requestBody);
+		System.out.println("Request Body:"+event);
         // Insert into DynamoDB
         try {
 			// Parse the JSON body
