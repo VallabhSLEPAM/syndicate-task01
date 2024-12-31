@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
@@ -30,14 +30,14 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
         authType = AuthType.NONE
         // invokeMode = InvokeMode.BUFFERED
 )
-public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
+public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final DynamoDbClient dynamoDbClient = DynamoDbClient.create();
     private static final String TABLE_NAME = "Events";
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent event, Context context) {
+	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 			
         String requestBody = event.getBody();
 		System.out.println("Request Body:"+event);
@@ -71,16 +71,16 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
             String responseBody = objectMapper.writeValueAsString(response);
 
             // Return success response
-            return new APIGatewayV2HTTPResponse().builder()
+            return new APIGatewayProxyResponseEvent()
                     .withStatusCode(201)
-                    .withBody(responseBody).build();
+                    .withBody(responseBody);
         } catch (Exception e) {
             context.getLogger().log("Error storing data in DynamoDB: " + e.getMessage());
 
             // Return error response
-            return new APIGatewayV2HTTPResponse().builder()
+            return new APIGatewayProxyResponseEvent()
                     .withStatusCode(500)
-                    .withBody("Failed to store data: " + e.getMessage()).build();
+                    .withBody("Failed to store data: " + e.getMessage());
         }
 	}
 }
