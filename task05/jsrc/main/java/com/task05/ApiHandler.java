@@ -14,6 +14,7 @@ import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
 import com.syndicate.deployment.model.RetentionSetting;
 import com.syndicate.deployment.model.lambda.url.AuthType;
+import com.syndicate.deployment.model.lambda.url.InvokeMode;
 
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -27,33 +28,33 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
 @LambdaUrlConfig(
-        authType = AuthType.NONE
-        // invokeMode = InvokeMode.BUFFERED
+        authType = AuthType.NONE,
+        invokeMode = InvokeMode.BUFFERED
 )
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final DynamoDbClient dynamoDbClient = DynamoDbClient.create();
-    private static final String TABLE_NAME = "cmtr-39f7a706-Events-test";
+    private static final String TABLE_NAME = "Events";
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 			
         String requestBody = event.getBody();
-		System.out.println("Request Body:"+event);
+		System.out.println("Request Body:"+ event);
         // Insert into DynamoDB
         try {
 			// Parse the JSON body
             JsonNode jsonNode = objectMapper.readTree(requestBody);
- 			String content = jsonNode.get("	").asText();
-			String principalId = jsonNode.get("principalId").asText();
+ 			// String content = jsonNode.get("content").asText();
+			// String principalId = jsonNode.get("principalId").asText();
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
 	   
 			// Prepare item for DynamoDB
 			Map<String, AttributeValue> item = new HashMap<>();
 			item.put("id", AttributeValue.builder().s(requestId).build());
-			item.put("body", AttributeValue.builder().s(content).build());
-			item.put("principalId", AttributeValue.builder().s(principalId).build());
+			// item.put("body", AttributeValue.builder().s(content).build());
+			// item.put("principalId", AttributeValue.builder().s(principalId).build());
 			item.put("createdAt", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
 			
 			Map<String, Object> response = new HashMap<>();
