@@ -8,7 +8,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
@@ -45,7 +44,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         // Insert into DynamoDB
         try {
 			// Parse the JSON body
-            JsonNode jsonNode = objectMapper.readTree(requestBody);
+            // JsonNode jsonNode = objectMapper.readTree(requestBody);
  			// String content = jsonNode.get("content").asText();
 			// String principalId = jsonNode.get("principalId").asText();
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
