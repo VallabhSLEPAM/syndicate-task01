@@ -39,7 +39,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 			
-        String requestBody = event.getBody();
+        // String requestBody = event.getBody();
 		System.out.println("Request Body:"+ event);
         // Insert into DynamoDB
         try {
