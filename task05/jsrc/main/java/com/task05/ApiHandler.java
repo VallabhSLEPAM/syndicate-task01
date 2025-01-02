@@ -38,7 +38,7 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final DynamoDbClient dynamoDbClient = DynamoDbClient.create();
-    private static final String TABLE_NAME = "Events";
+    private static final String TABLE_NAME = "cmtr-39f7a706-Events-test";
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
