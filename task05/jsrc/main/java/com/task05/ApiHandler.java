@@ -19,6 +19,9 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
+// import com.syndicate.deployment.annotations.resources.DependsOn;
+// import com.syndicate.deployment.model.ResourceType;
+
 @LambdaHandler(
     lambdaName = "api_handler",
 	roleName = "api_handler-role",
@@ -30,6 +33,7 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
         authType = AuthType.NONE,
         invokeMode = InvokeMode.BUFFERED
 )
+// @DependsOn(name="", ResourceType=ResourceType.)
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final DynamoDbClient dynamoDbClient = DynamoDbClient.create();
@@ -55,11 +59,12 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			// item.put("body", AttributeValue.builder().s(content).build());
 			// item.put("principalId", AttributeValue.builder().s(principalId).build());
 			item.put("createdAt", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
-			
+			 System.out.println("Ok till here 1");
+
 			Map<String, Object> response = new HashMap<>();
             response.put("statusCode", 201);
             response.put("event", item);
-
+            System.out.println("Ok till here 2");
 
             PutItemRequest request = PutItemRequest.builder()
                     .tableName(TABLE_NAME)
@@ -69,7 +74,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             dynamoDbClient.putItem(request);
             context.getLogger().log("Item successfully stored in DynamoDB");
             String responseBody = objectMapper.writeValueAsString(response);
-
+            System.out.println("responseBody: "+responseBody);
+           
             // Return success response
             return new APIGatewayProxyResponseEvent()
                     .withStatusCode(201)
