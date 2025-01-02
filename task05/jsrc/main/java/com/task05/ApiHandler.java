@@ -52,9 +52,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			// Parse the JSON body
             JsonNode jsonNode = objectMapper.readTree(requestBody);
  			String content = jsonNode.get("content").asText();
-            System.out.println("Content:"+ content);
 
 			String principalId = jsonNode.get("principalId").asText();
+            System.out.println("jsonNode => "+ jsonNode + " Content: " +content+ " PrincipalID: "+principalId);
+
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
 	   
 			// Prepare item for DynamoDB
@@ -63,21 +64,19 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			item.put("body", AttributeValue.builder().s(content).build());
 			item.put("principalId", AttributeValue.builder().s(principalId).build());
 			item.put("createdAt", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
-			 System.out.println("Ok till here 1");
 
 			Map<String, Object> response = new HashMap<>();
             response.put("statusCode", 201);
             response.put("event", item);
-            System.out.println("Ok till here 2");
 
             PutItemRequest request = PutItemRequest.builder()
                     .tableName(TABLE_NAME)
                     .item(item)
                     .build();
-            System.out.println("Ok till here 3");
+            System.out.println("Ok till here 1");
 
             dynamoDbClient.putItem(request);
-            System.out.println("Ok till here 4");
+            System.out.println("Ok till here 2");
 
             context.getLogger().log("Item successfully stored in DynamoDB");
             String responseBody = objectMapper.writeValueAsString(response);
