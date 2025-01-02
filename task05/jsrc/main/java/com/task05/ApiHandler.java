@@ -45,12 +45,15 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 			
         String requestBody = event.getBody();
-		System.out.println("Request Body:"+ event);
+		System.out.println("Event:"+ event);
+        System.out.println("Request Body:"+ requestBody);
         // Insert into DynamoDB
         try {
 			// Parse the JSON body
             JsonNode jsonNode = objectMapper.readTree(requestBody);
  			String content = jsonNode.get("content").asText();
+            System.out.println("Content:"+ content);
+
 			String principalId = jsonNode.get("principalId").asText();
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
 	   
