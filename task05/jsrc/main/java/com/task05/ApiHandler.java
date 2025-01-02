@@ -8,6 +8,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
@@ -43,21 +44,21 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 			
-        // String requestBody = event.getBody();
+        String requestBody = event.getBody();
 		System.out.println("Request Body:"+ event);
         // Insert into DynamoDB
         try {
 			// Parse the JSON body
-            // JsonNode jsonNode = objectMapper.readTree(requestBody);
- 			// String content = jsonNode.get("content").asText();
-			// String principalId = jsonNode.get("principalId").asText();
+            JsonNode jsonNode = objectMapper.readTree(requestBody);
+ 			String content = jsonNode.get("content").asText();
+			String principalId = jsonNode.get("principalId").asText();
  			String requestId = UUID.randomUUID().toString(); // Unique ID for each record
 	   
 			// Prepare item for DynamoDB
 			Map<String, AttributeValue> item = new HashMap<>();
 			item.put("id", AttributeValue.builder().s(requestId).build());
-			// item.put("body", AttributeValue.builder().s(content).build());
-			// item.put("principalId", AttributeValue.builder().s(principalId).build());
+			item.put("body", AttributeValue.builder().s(content).build());
+			item.put("principalId", AttributeValue.builder().s(principalId).build());
 			item.put("createdAt", AttributeValue.builder().s(String.valueOf(System.currentTimeMillis())).build());
 			 System.out.println("Ok till here 1");
 
@@ -70,8 +71,11 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
                     .tableName(TABLE_NAME)
                     .item(item)
                     .build();
+            System.out.println("Ok till here 3");
 
             dynamoDbClient.putItem(request);
+            System.out.println("Ok till here 4");
+
             context.getLogger().log("Item successfully stored in DynamoDB");
             String responseBody = objectMapper.writeValueAsString(response);
             System.out.println("responseBody: "+responseBody);
